@@ -183,11 +183,6 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         </div>
       )}
 
-      {/* Jitsi watermark logo cover overlay */}
-      <div 
-        className="absolute top-0 w-32 h-14 bg-[#131526] pointer-events-none z-10 transition-all duration-300"
-        style={{ left: isChatOpen ? "375px" : "0px" }}
-      />
 
       {/* Jitsi iframe mount point */}
       <div id="jitsi-iframe-container" ref={containerRef} className="w-full h-full jitsi-container" />
