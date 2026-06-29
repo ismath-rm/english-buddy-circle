@@ -209,6 +209,29 @@ export default function RoomPage() {
     };
   }, [room, userName, isPasswordVerified, roomId]);
 
+  // Lock body and html element scrolling to prevent autofocus shifts from hiding the header
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalHeight = document.body.style.height;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalHtmlHeight = document.documentElement.style.height;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.height = "100vh";
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.height = "100vh";
+
+    // Scroll window back to top just in case browser has already scrolled it
+    window.scrollTo(0, 0);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.height = originalHeight;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.documentElement.style.height = originalHtmlHeight;
+    };
+  }, []);
+
   // Actions
   const verifyPassword = (e: React.FormEvent) => {
     e.preventDefault();
