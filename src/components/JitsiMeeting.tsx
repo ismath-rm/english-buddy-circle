@@ -53,6 +53,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
             disableInviteFunctions: true, // Disable Jitsi default invite overlay (we use our own)
             toolbarButtons: [
               "microphone",
+              "camera",
               "closedcaptions",
               "desktop",
               "fullscreen",
@@ -60,7 +61,10 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
               "hangup",
               "raisehand",
               "tileview",
-              "chat"
+              "chat",
+              "participants-pane",
+              "settings",
+              "profile"
             ],
             // Enable screensharing, recording off
             localRecording: { enabled: false }
@@ -126,7 +130,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
   }, [roomId, userName, onLeave]);
 
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/40 dark:border-slate-800/40 shadow-xl min-h-[350px] sm:min-h-[400px] lg:min-h-0">
+    <div className="relative w-full h-full overflow-hidden bg-slate-900">
       {/* Loading overlay */}
       {status === "loading" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-900 z-10">

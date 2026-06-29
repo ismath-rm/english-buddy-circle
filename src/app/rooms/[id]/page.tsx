@@ -401,112 +401,14 @@ export default function RoomPage() {
     );
   }
 
-  // 3. Main Call Screen
+  // 3. Main Call Screen (Full screen Jitsi call)
   return (
-    <div className="flex-grow flex flex-col lg:h-screen lg:overflow-hidden min-h-screen">
-      
-      {/* ROOM HEADER PANEL */}
-      <header className="border-b border-slate-200/50 dark:border-slate-800/40 bg-white/70 dark:bg-[#0b0c16]/70 backdrop-blur-md shrink-0 h-16">
-        <div className="w-full px-6 h-16 flex items-center justify-between">
-          
-          <div className="flex items-center gap-4 min-w-0">
-            <button
-              onClick={handleLeaveRoom}
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400"
-              title="Leave Room"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-            
-            <div className="min-w-0">
-              <h1 className="font-bold text-sm sm:text-base text-slate-950 dark:text-white truncate leading-tight">
-                {room?.name}
-              </h1>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
-                <BookOpen className="w-3 h-3 text-brand-500" />
-                <span>Topic: <strong className="font-semibold">{room?.topic}</strong></span>
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {/* Difficulty Badge */}
-            <span className={`hidden sm:inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getDifficultyColor(room?.difficulty || "")}`}>
-              {room?.difficulty}
-            </span>
-
-            {/* Leave Room Button */}
-            <button
-              onClick={handleLeaveRoom}
-              className="flex items-center justify-center gap-1.5 px-4.5 py-2 rounded-xl text-xs font-bold bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/20 border border-rose-200/20 dark:border-rose-500/20 transition-all shrink-0 cursor-pointer"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Leave Room</span>
-            </button>
-          </div>
-
-        </div>
-      </header>
-
-      {/* CORE MEETING INTERFACE CONTAINER */}
-      <div className="flex-grow w-full px-6 py-4 flex flex-col lg:flex-row gap-4 min-h-0 lg:overflow-hidden">
-        
-        {/* Left Side: Jitsi Meeting Screen */}
-        <div className="w-full lg:w-0 lg:flex-1 h-[50vh] lg:h-full min-h-[350px] lg:min-h-0 shrink-0">
-          <JitsiMeeting 
-            roomId={roomId} 
-            userName={userName} 
-            onLeave={handleLeaveRoom} 
-          />
-        </div>
-
-        {/* Right Side: Sidebar Controls panel (Scrollable) */}
-        <aside className="w-full lg:w-96 shrink-0 flex flex-col gap-4 lg:overflow-y-auto lg:h-full min-h-0">
-          
-          {/* Room info & Guidelines Card */}
-          <div className="p-4 rounded-2xl glass-card border border-slate-200/40 dark:border-slate-800/40">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-2.5">
-              <Info className="w-3.5 h-3.5 text-brand-500" />
-              <span>Room Guidelines</span>
-            </div>
-            
-            {/* Rules list */}
-            <ul className="text-xs text-slate-600 dark:text-slate-400 flex flex-col gap-1.5 list-none">
-              <li className="flex items-start gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                <span>Speak <strong>only English</strong> to practice effectively.</span>
-              </li>
-              <li className="flex items-start gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                <span>Respect everyone and encourage beginners.</span>
-              </li>
-              <li className="flex items-start gap-1.5">
-                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                <span>Microphone recommended. Camera is optional.</span>
-              </li>
-            </ul>
-
-            {/* Room description */}
-            {room?.description && (
-              <div className="mt-3 pt-3 border-t border-slate-200/50 dark:border-slate-800/30 text-xs text-slate-500 dark:text-slate-400 leading-relaxed italic">
-                &ldquo;{room.description}&rdquo;
-              </div>
-            )}
-          </div>
-
-          {/* Speakers Presence list removed */}
-
-
-
-          {/* Chat Component */}
-          <div className="flex-grow lg:h-80 min-h-[300px]">
-            <ChatSidebar roomId={roomId} userName={userName} />
-          </div>
-
-        </aside>
-
-      </div>
-
+    <div className="w-screen h-screen overflow-hidden bg-[#131526]">
+      <JitsiMeeting 
+        roomId={roomId} 
+        userName={userName} 
+        onLeave={handleLeaveRoom} 
+      />
     </div>
   );
 }
