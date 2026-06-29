@@ -126,7 +126,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
   }, [roomId, userName, onLeave]);
 
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/40 dark:border-slate-800/40 shadow-xl">
+    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200/40 dark:border-slate-800/40 shadow-xl min-h-[350px] sm:min-h-[400px] lg:min-h-0">
       {/* Loading overlay */}
       {status === "loading" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-900 z-10">

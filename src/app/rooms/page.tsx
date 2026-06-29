@@ -72,7 +72,15 @@ function DashboardContent() {
         participant_count: room.participants ? room.participants.length : 0
       }));
 
-      setRooms(mappedRooms);
+      // Filter out empty rooms older than 60 seconds (ghost rooms) to show only active rooms
+      const now = new Date().getTime();
+      const activeRooms = mappedRooms.filter((room) => {
+        const createdTime = new Date(room.created_at).getTime();
+        const ageInSeconds = (now - createdTime) / 1000;
+        return room.participant_count > 0 || ageInSeconds < 60;
+      });
+
+      setRooms(activeRooms);
     } catch (err) {
       console.error("Error fetching rooms:", err);
     } finally {

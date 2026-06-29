@@ -77,7 +77,8 @@ export default function RoomPage() {
         }
 
         setRoom(data);
-        setIsPasswordVerified(!data.is_private);
+        const isVerified = !data.is_private || sessionStorage.getItem(`ebc_verified_${roomId}`) === "true";
+        setIsPasswordVerified(isVerified);
 
         // Check for username cache in localStorage
         const cachedName = localStorage.getItem("ebc_username");
@@ -172,11 +173,21 @@ export default function RoomPage() {
       const sessionIdStr = sessionStorage.getItem(`ebc_session_${roomId}`);
       if (!sessionIdStr) return;
 
-      // Use Navigator.sendBeacon for reliable window close fetch
-      const payloadObj = {
-        session_id: sessionIdStr,
-        room_id: roomId
-      };
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      if (supabaseUrl && supabaseAnonKey) {
+        const url = `${supabaseUrl}/rest/v1/participants?session_id=eq.${sessionIdStr}&room_id=eq.${roomId}`;
+        fetch(url, {
+          method: "DELETE",
+          headers: {
+            "apikey": supabaseAnonKey,
+            "Authorization": `Bearer ${supabaseAnonKey}`,
+            "Content-Type": "application/json"
+          },
+          keepalive: true
+        }).catch(err => console.error("Unload fetch error:", err));
+      }
 
       // Direct async deletion
       supabase
@@ -204,6 +215,7 @@ export default function RoomPage() {
     if (!room) return;
     if (passwordInput.trim() === room.password) {
       setIsPasswordVerified(true);
+      sessionStorage.setItem(`ebc_verified_${roomId}`, "true");
       setError("");
     } else {
       setError("Incorrect password. Please try again.");
@@ -368,7 +380,7 @@ export default function RoomPage() {
 
   // 3. Main Call Screen
   return (
-    <div className="flex-grow flex flex-col h-[100vh]">
+    <div className="flex-grow flex flex-col lg:h-screen lg:overflow-hidden min-h-screen">
       
       {/* ROOM HEADER PANEL */}
       <header className="border-b border-slate-200/50 dark:border-slate-800/40 bg-white/70 dark:bg-[#0b0c16]/70 backdrop-blur-md shrink-0">
@@ -414,10 +426,10 @@ export default function RoomPage() {
       </header>
 
       {/* CORE MEETING INTERFACE CONTAINER */}
-      <div className="flex-grow max-w-7xl w-full mx-auto px-4 py-4 flex flex-col lg:flex-row gap-4 min-h-0">
+      <div className="flex-grow max-w-7xl w-full mx-auto px-4 py-4 flex flex-col lg:flex-row gap-4 min-h-0 lg:overflow-hidden">
         
         {/* Left Side: Jitsi Meeting Screen */}
-        <div className="flex-grow h-[45vh] lg:h-full min-h-0">
+        <div className="w-full lg:flex-grow h-[50vh] lg:h-full min-h-[350px] lg:min-h-0 shrink-0 lg:shrink">
           <JitsiMeeting 
             roomId={roomId} 
             userName={userName} 
@@ -426,7 +438,7 @@ export default function RoomPage() {
         </div>
 
         {/* Right Side: Sidebar Controls panel (Scrollable) */}
-        <aside className="w-full lg:w-96 shrink-0 flex flex-col gap-4 overflow-y-auto lg:h-full min-h-0">
+        <aside className="w-full lg:w-96 shrink-0 flex flex-col gap-4 lg:overflow-y-auto lg:h-full min-h-0">
           
           {/* Room info & Guidelines Card */}
           <div className="p-4 rounded-2xl glass-card border border-slate-200/40 dark:border-slate-800/40">
