@@ -19,6 +19,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
   const containerRef = useRef<HTMLDivElement>(null);
   const jitsiApiRef = useRef<any>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     let scriptTimeout: NodeJS.Timeout;
@@ -104,6 +105,11 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
           onLeave();
         });
 
+        api.addEventListener("chatToggled", (data: any) => {
+          console.log("Jitsi: Chat toggled:", data.isOpen);
+          setIsChatOpen(data.isOpen);
+        });
+
       } catch (err) {
         console.error("Failed to initialize Jitsi API:", err);
         setStatus("error");
@@ -171,7 +177,10 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
       )}
 
       {/* Jitsi watermark logo cover overlay */}
-      <div className="absolute top-0 left-0 bg-[#131526] w-32 h-16 pointer-events-none z-10" />
+      <div 
+        className="absolute top-0 w-32 h-16 bg-[#131526] pointer-events-none z-10 transition-all duration-300"
+        style={{ left: isChatOpen ? "375px" : "0px" }}
+      />
 
       {/* Jitsi iframe mount point */}
       <div id="jitsi-iframe-container" ref={containerRef} className="w-full h-full jitsi-container" />
