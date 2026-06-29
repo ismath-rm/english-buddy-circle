@@ -183,13 +183,11 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         </div>
       )}
 
-      {/* Jitsi watermark logo cover overlay (Custom EBC Branding) */}
+      {/* Jitsi watermark logo cover overlay */}
       <div 
-        className="absolute top-0 w-32 h-14 bg-[#131526] pointer-events-none z-10 transition-all duration-300 flex items-center justify-center border-b border-r border-slate-800/10"
+        className="absolute top-0 w-32 h-14 bg-[#131526] pointer-events-none z-10 transition-all duration-300"
         style={{ left: isChatOpen ? "375px" : "0px" }}
-      >
-        <span className="text-white font-extrabold text-sm uppercase tracking-wider font-sans select-none opacity-80">EBC</span>
-      </div>
+      />
 
       {/* Jitsi iframe mount point */}
       <div id="jitsi-iframe-container" ref={containerRef} className="w-full h-full jitsi-container" />
