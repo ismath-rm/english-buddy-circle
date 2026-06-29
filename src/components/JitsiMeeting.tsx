@@ -33,7 +33,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         // Unique room name prefix to avoid collision on the public Jitsi server
         const uniqueRoomName = `ebc-speaking-room-${roomId}`;
         
-        const domain = "meet.ffmuc.net";
+        const domain = "jitsi.belnet.be";
         const options = {
           roomName: uniqueRoomName,
           width: "100%",
@@ -104,7 +104,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
       } else {
         // Dynamically insert script if not loaded yet
         const script = document.createElement("script");
-        script.src = "https://meet.ffmuc.net/external_api.js";
+        script.src = "https://jitsi.belnet.be/external_api.js";
         script.async = true;
         script.onload = () => initJitsi();
         script.onerror = () => setStatus("error");
