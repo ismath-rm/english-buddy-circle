@@ -93,14 +93,8 @@ export default function LandingPage() {
             {/* Actions */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-2">
               <Link
-                href="/rooms"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-base bg-gradient-to-tr from-brand-600 to-indigo-600 text-white shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transition-all text-center"
-              >
-                Join a Room
-              </Link>
-              <Link
                 href="/rooms?create=true"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all text-center"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-bold text-base bg-gradient-to-tr from-brand-600 to-indigo-600 text-white shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transition-all text-center"
               >
                 Create a Room
               </Link>

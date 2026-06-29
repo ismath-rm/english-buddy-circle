@@ -143,23 +143,7 @@ function DashboardContent() {
   }, []);
 
   // Filtered rooms logic
-  const filteredRooms = rooms.filter((room) => {
-    // Search queries (name, topic, host)
-    const matchesSearch =
-      room.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      room.topic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      room.host_name.toLowerCase().includes(searchQuery.toLowerCase());
-
-    // Difficulty filter
-    const matchesDifficulty =
-      filterDifficulty === "All" || room.difficulty === filterDifficulty;
-
-    // Category filter
-    const matchesCategory =
-      filterCategory === "All" || room.category === filterCategory;
-
-    return matchesSearch && matchesDifficulty && matchesCategory;
-  });
+  const filteredRooms = rooms;
 
   return (
     <>
@@ -185,65 +169,7 @@ function DashboardContent() {
           </button>
         </section>
 
-        {/* SEARCH & FILTERS CONTROLS BAR */}
-        <section className="p-4 rounded-2xl glass border border-slate-200/40 dark:border-slate-800/30 flex flex-col lg:flex-row items-center gap-4">
-          
-          {/* Search Field */}
-          <div className="relative w-full lg:flex-grow">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search rooms, topics, or hosts..."
-              className="w-full text-sm rounded-xl pl-10 pr-4 py-2 bg-slate-100/50 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/80 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-brand-500 transition-colors"
-            />
-          </div>
 
-          {/* Difficulty filter dropdown */}
-          <div className="flex items-center gap-2 w-full lg:w-auto shrink-0">
-            <Filter className="w-4 h-4 text-slate-400 shrink-0 hidden sm:block" />
-            <select
-              value={filterDifficulty}
-              onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="w-full lg:w-44 text-sm rounded-xl px-3 py-2 bg-slate-100/50 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/80 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-brand-500 transition-colors"
-            >
-              <option value="All">All Difficulties</option>
-              {DIFFICULTIES.map((diff) => (
-                <option key={diff} value={diff}>
-                  {diff}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Category filter dropdown */}
-          <div className="w-full lg:w-auto shrink-0">
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full lg:w-52 text-sm rounded-xl px-3 py-2 bg-slate-100/50 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/80 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-brand-500 transition-colors"
-            >
-              <option value="All">All Categories</option>
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Manual Refresh button */}
-          <button
-            onClick={() => fetchRooms(true)}
-            disabled={isRefreshing}
-            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/50 dark:hover:bg-slate-800/80 border border-slate-200/40 dark:border-slate-800/40 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer shrink-0"
-            title="Refresh Rooms List"
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
-          </button>
-
-        </section>
 
         {/* ROOM CARDS GRID */}
         {loading ? (

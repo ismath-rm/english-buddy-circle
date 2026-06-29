@@ -47,23 +47,6 @@ export default function RoomCard({ room }: RoomCardProps) {
 
       {/* Top Section: Topic & Title */}
       <div className="flex flex-col gap-3.5">
-        
-        {/* Badges */}
-        <div className="flex flex-wrap gap-2 items-center">
-          <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getDifficultyStyles(room.difficulty)}`}>
-            {room.difficulty}
-          </span>
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-200/30 dark:border-brand-500/20">
-            {room.category}
-          </span>
-          {room.is_private && (
-            <span className="flex items-center gap-0.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-              <ShieldAlert className="w-3 h-3" />
-              <span>Password Required</span>
-            </span>
-          )}
-        </div>
-
         {/* Room Name & Topic */}
         <div>
           <h3 className="font-bold text-lg text-slate-800 dark:text-white leading-tight mb-1 group-hover:text-brand-500 transition-colors">
@@ -74,35 +57,23 @@ export default function RoomCard({ room }: RoomCardProps) {
             <p className="line-clamp-2">Topic: <strong className="font-semibold text-slate-700 dark:text-slate-300">{room.topic}</strong></p>
           </div>
         </div>
-
-        {/* Description */}
-        {room.description && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">
-            {room.description}
-          </p>
-        )}
       </div>
 
       {/* Bottom Section: Details & CTA */}
       <div className="flex flex-col gap-4 border-t border-slate-200/50 dark:border-slate-800/30 pt-4">
         
         {/* Host & Count Grid */}
-        <div className="grid grid-cols-2 gap-y-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+        <div className="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-1.5">
             <User className="w-3.5 h-3.5 text-slate-400" />
             <span className="truncate">Host: <strong className="font-semibold text-slate-700 dark:text-slate-300">{room.host_name}</strong></span>
           </div>
 
-          <div className="flex items-center gap-1.5 justify-end">
+          <div className="flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-slate-400" />
             <span className={isFull ? "text-rose-500 font-semibold" : ""}>
               {room.participant_count || 0} / {room.max_participants} joined
             </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 col-span-2">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            <span>Created {formatTimeAgo(room.created_at)}</span>
           </div>
         </div>
 
