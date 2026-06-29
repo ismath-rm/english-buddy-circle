@@ -48,10 +48,16 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
             startWithVideoMuted: true,
             startAudioOnly: true, // Force audio-only mode
             constraints: { video: false }, // Completely disable video stream requests
+            prejoinConfig: {
+              enabled: false
+            },
             prejoinPageEnabled: false, // Skip Jitsi prejoin since user entered details already
             disableDeepLinking: true,  // Prevent mobile redirect prompts
             mobileAppPromo: false,     // Disable Jitsi Meet app download promo banner on mobile
             hideWatermark: true,       // Hide Jitsi watermark/logos in the conference
+            logoImageUrl: "",          // Remove logo image URL
+            logoClickUrl: "",          // Remove logo click redirect
+            brandShowName: false,      // Hide brand name text
             favicon: "/favicon.ico",   // Override favicon to preserve site icon
             disableInviteFunctions: true, // Disable Jitsi default invite overlay (we use our own)
             toolbarButtons: [
@@ -75,6 +81,9 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
           interfaceConfigOverwrite: {
             SHOW_JITSI_WATERMARK: false,
             SHOW_BRAND_WATERMARK: false,
+            SHOW_POWERED_BY: false,
+            JITSI_WATERMARK_LINK: "",
+            BRAND_WATERMARK_LINK: "",
             DEFAULT_BACKGROUND: "#131526",
             DEFAULT_LOCAL_DISPLAY_NAME: userName
           }
