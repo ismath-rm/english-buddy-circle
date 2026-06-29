@@ -170,6 +170,9 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         </div>
       )}
 
+      {/* Jitsi watermark logo cover overlay */}
+      <div className="absolute top-0 left-0 bg-[#131526] w-32 h-16 pointer-events-none z-10" />
+
       {/* Jitsi iframe mount point */}
       <div id="jitsi-iframe-container" ref={containerRef} className="w-full h-full jitsi-container" />
     </div>
