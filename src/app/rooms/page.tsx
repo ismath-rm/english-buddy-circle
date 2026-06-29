@@ -72,10 +72,15 @@ function DashboardContent() {
         participant_count: room.participants ? room.participants.length : 0
       }));
 
-      // Find empty rooms (participant_count === 0) to delete them on the database side
+      // Find empty rooms (participant_count === 0) that are older than 30 seconds to delete them on the database side
+      const now = new Date().getTime();
       const emptyRoomIds = mappedRooms
-        .filter(r => r.participant_count === 0)
-        .map(r => r.id);
+        .filter((r) => {
+          const createdTime = new Date(r.created_at).getTime();
+          const ageInSeconds = (now - createdTime) / 1000;
+          return r.participant_count === 0 && ageInSeconds > 30;
+        })
+        .map((r) => r.id);
 
       if (emptyRoomIds.length > 0) {
         console.log("Client-side cleanup: Deleting empty rooms:", emptyRoomIds);
