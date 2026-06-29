@@ -17,7 +17,7 @@ export default function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProp
   // Form States
   const [hostName, setHostName] = useState("");
   const [name, setName] = useState("");
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState("English Speaking Conversation Practice");
   const [category, setCategory] = useState<CategoryType>("Daily Conversation");
   const [difficulty, setDifficulty] = useState<DifficultyType>("Intermediate");
   const [maxParticipants, setMaxParticipants] = useState(30);
@@ -148,128 +148,18 @@ export default function CreateRoomModal({ isOpen, onClose }: CreateRoomModalProp
             />
           </div>
 
-          {/* Room details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Room Name</label>
-              <input 
-                type="text" 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Fluent Speaking Circle"
-                className="text-sm rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/60 focus:outline-none focus:border-brand-500 transition-colors"
-                required
-                maxLength={50}
-              />
-            </div>
-            
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Speaking Topic</label>
-              <input 
-                type="text" 
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                placeholder="e.g. My Favorite Books & Movies"
-                className="text-sm rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/60 focus:outline-none focus:border-brand-500 transition-colors"
-                required
-                maxLength={80}
-              />
-            </div>
-          </div>
-
-          {/* Select Category & Limit */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value as CategoryType)}
-                className="text-sm rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/60 focus:outline-none focus:border-brand-500 transition-colors"
-              >
-                {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Max Speakers: <span className="text-brand-500 font-bold">{maxParticipants}</span>
-              </label>
-              <input
-                type="range"
-                min="2"
-                max="50"
-                value={maxParticipants}
-                onChange={(e) => setMaxParticipants(parseInt(e.target.value))}
-                className="h-2 my-auto bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500"
-              />
-            </div>
-          </div>
-
-          {/* Difficulty Toggles */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Target Level</label>
-            <div className="grid grid-cols-3 gap-2">
-              {DIFFICULTIES.map(lvl => (
-                <button
-                  type="button"
-                  key={lvl}
-                  onClick={() => setDifficulty(lvl)}
-                  className={`py-2 text-xs font-semibold rounded-xl border transition-all ${
-                    difficulty === lvl
-                      ? "bg-brand-600 text-white border-transparent shadow-md shadow-brand-500/10"
-                      : "bg-slate-50 dark:bg-slate-900/50 border-slate-200/60 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50"
-                  }`}
-                >
-                  {lvl}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Description */}
+          {/* Room Name */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Description (Optional)</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Free-flow discussion. Let's introduce ourselves and review films."
-              className="text-sm rounded-xl px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/60 focus:outline-none focus:border-brand-500 transition-colors h-16 resize-none"
-              maxLength={200}
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Room Name</label>
+            <input 
+              type="text" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Fluent Speaking Circle"
+              className="text-sm rounded-xl px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/60 focus:outline-none focus:border-brand-500 transition-colors"
+              required
+              maxLength={50}
             />
-          </div>
-
-          {/* Privacy Controls */}
-          <div className="flex flex-col gap-2 p-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200/40 dark:border-slate-800/40 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {isPrivate ? (
-                  <Shield className="w-4 h-4 text-brand-500" />
-                ) : (
-                  <ShieldOff className="w-4 h-4 text-slate-400" />
-                )}
-                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">Private Password-Protected Room</span>
-              </div>
-              <input
-                type="checkbox"
-                checked={isPrivate}
-                onChange={(e) => setIsPrivate(e.target.checked)}
-                className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 bg-slate-200 dark:bg-slate-800 border-slate-300 accent-brand-500"
-              />
-            </div>
-
-            {isPrivate && (
-              <input
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter room password"
-                className="text-xs rounded-lg px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-brand-500 mt-1"
-                maxLength={20}
-                required={isPrivate}
-              />
-            )}
           </div>
 
           {/* Actions */}
