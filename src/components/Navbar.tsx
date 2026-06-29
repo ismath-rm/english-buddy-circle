@@ -47,7 +47,7 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="/rooms"
+            href="/"
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-500/20 transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />

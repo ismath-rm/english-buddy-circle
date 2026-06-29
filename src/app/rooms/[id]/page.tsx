@@ -262,10 +262,10 @@ export default function RoomPage() {
         .eq("session_id", sessionId)
         .eq("room_id", roomId)
         .then(() => {
-          router.push("/rooms");
+          router.push("/");
         });
     } else {
-      router.push("/rooms");
+      router.push("/");
     }
   };
 
@@ -288,11 +288,11 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold dark:text-white">Failed to join room</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm">{error}</p>
         <button
-          onClick={() => router.push("/rooms")}
+          onClick={() => router.push("/")}
           className="mt-6 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/10 hover:shadow-brand-500/25 transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Rooms</span>
+          <span>Back to Home</span>
         </button>
       </div>
     );
@@ -334,7 +334,7 @@ export default function RoomPage() {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => router.push("/rooms")}
+                onClick={() => router.push("/")}
                 className="flex-grow py-2.5 rounded-xl text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 transition-colors"
               >
                 Back
@@ -383,7 +383,7 @@ export default function RoomPage() {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => router.push("/rooms")}
+                onClick={() => router.push("/")}
                 className="flex-grow py-2.5 rounded-xl text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 transition-colors"
               >
                 Back
