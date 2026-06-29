@@ -110,6 +110,13 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
           setIsChatOpen(data.isOpen);
         });
 
+        api.addEventListener("toolbarButtonClicked", (data: any) => {
+          console.log("Jitsi: Toolbar button clicked:", data.name);
+          if (data.name === "chat") {
+            setIsChatOpen((prev) => !prev);
+          }
+        });
+
       } catch (err) {
         console.error("Failed to initialize Jitsi API:", err);
         setStatus("error");
@@ -176,11 +183,13 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         </div>
       )}
 
-      {/* Jitsi watermark logo cover overlay */}
+      {/* Jitsi watermark logo cover overlay (Custom EBC Branding) */}
       <div 
-        className="absolute top-0 w-32 h-16 bg-[#131526] pointer-events-none z-10 transition-all duration-300"
+        className="absolute top-0 w-32 h-14 bg-[#131526] pointer-events-none z-10 transition-all duration-300 flex items-center justify-center border-b border-r border-slate-800/10"
         style={{ left: isChatOpen ? "375px" : "0px" }}
-      />
+      >
+        <span className="text-white font-extrabold text-sm uppercase tracking-wider font-sans select-none opacity-80">EBC</span>
+      </div>
 
       {/* Jitsi iframe mount point */}
       <div id="jitsi-iframe-container" ref={containerRef} className="w-full h-full jitsi-container" />
