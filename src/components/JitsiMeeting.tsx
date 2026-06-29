@@ -50,6 +50,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
             constraints: { video: false }, // Completely disable video stream requests
             prejoinPageEnabled: false, // Skip Jitsi prejoin since user entered details already
             disableDeepLinking: true,  // Prevent mobile redirect prompts
+            mobileAppPromo: false,     // Disable Jitsi Meet app download promo banner on mobile
             disableInviteFunctions: true, // Disable Jitsi default invite overlay (we use our own)
             toolbarButtons: [
               "microphone",

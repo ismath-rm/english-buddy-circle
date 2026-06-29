@@ -403,7 +403,7 @@ export default function RoomPage() {
 
   // 3. Main Call Screen (Full screen Jitsi call)
   return (
-    <div className="w-screen h-screen overflow-hidden bg-[#131526]">
+    <div className="fixed inset-0 w-screen h-[100dvh] overflow-hidden bg-[#131526] z-50">
       <JitsiMeeting 
         roomId={roomId} 
         userName={userName} 
