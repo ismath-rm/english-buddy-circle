@@ -382,7 +382,8 @@ export default function RoomPage() {
   return (
     <div className="flex-grow flex flex-col lg:h-screen lg:overflow-hidden min-h-screen">
       
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/50 dark:border-slate-800/40 bg-white/70 dark:bg-[#0b0c16]/70 backdrop-blur-md shrink-0 h-16">
+      {/* ROOM HEADER PANEL */}
+      <header className="border-b border-slate-200/50 dark:border-slate-800/40 bg-white/70 dark:bg-[#0b0c16]/70 backdrop-blur-md shrink-0 h-16">
         <div className="w-full px-6 h-16 flex items-center justify-between">
           
           <div className="flex items-center gap-4 min-w-0">
@@ -425,7 +426,7 @@ export default function RoomPage() {
       </header>
 
       {/* CORE MEETING INTERFACE CONTAINER */}
-      <div className="flex-grow w-full px-6 py-4 flex flex-col lg:flex-row gap-4 min-h-0 lg:overflow-hidden mt-16">
+      <div className="flex-grow w-full px-6 py-4 flex flex-col lg:flex-row gap-4 min-h-0 lg:overflow-hidden">
         
         {/* Left Side: Jitsi Meeting Screen */}
         <div className="w-full lg:w-0 lg:flex-1 h-[50vh] lg:h-full min-h-[350px] lg:min-h-0 shrink-0">

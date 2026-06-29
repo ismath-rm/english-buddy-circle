@@ -72,7 +72,23 @@ function DashboardContent() {
         participant_count: room.participants ? room.participants.length : 0
       }));
 
-      // Filter out empty rooms to show only active rooms
+      // Find empty rooms (participant_count === 0) to delete them on the database side
+      const emptyRoomIds = mappedRooms
+        .filter(r => r.participant_count === 0)
+        .map(r => r.id);
+
+      if (emptyRoomIds.length > 0) {
+        console.log("Client-side cleanup: Deleting empty rooms:", emptyRoomIds);
+        supabase
+          .from("rooms")
+          .delete()
+          .in("id", emptyRoomIds)
+          .then(({ error }) => {
+            if (error) console.error("Error cleaning empty rooms:", error);
+          });
+      }
+
+      // Filter out empty rooms to show only active rooms to the user
       const activeRooms = mappedRooms.filter((room) => room.participant_count > 0);
 
       setRooms(activeRooms);
