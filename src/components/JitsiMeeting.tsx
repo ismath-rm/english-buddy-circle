@@ -105,8 +105,8 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
           onLeave();
         });
 
-        api.addEventListener("chatToggled", (data: any) => {
-          console.log("Jitsi: Chat toggled:", data.isOpen);
+        api.addEventListener("chatUpdated", (data: any) => {
+          console.log("Jitsi: Chat updated:", data.isOpen);
           setIsChatOpen(data.isOpen);
         });
 
