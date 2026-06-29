@@ -383,7 +383,7 @@ export default function RoomPage() {
     <div className="flex-grow flex flex-col lg:h-screen lg:overflow-hidden min-h-screen">
       
       {/* ROOM HEADER PANEL */}
-      <header className="border-b border-slate-200/50 dark:border-slate-800/40 bg-white/70 dark:bg-[#0b0c16]/70 backdrop-blur-md shrink-0">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/50 dark:border-slate-800/40 bg-white/70 dark:bg-[#0b0c16]/70 backdrop-blur-md shrink-0 h-16">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           
           <div className="flex items-center gap-4 min-w-0">
@@ -426,7 +426,7 @@ export default function RoomPage() {
       </header>
 
       {/* CORE MEETING INTERFACE CONTAINER */}
-      <div className="flex-grow max-w-7xl w-full mx-auto px-4 py-4 flex flex-col lg:flex-row gap-4 min-h-0 lg:overflow-hidden">
+      <div className="flex-grow max-w-7xl w-full mx-auto px-4 py-4 flex flex-col lg:flex-row gap-4 min-h-0 lg:overflow-hidden mt-16">
         
         {/* Left Side: Jitsi Meeting Screen */}
         <div className="w-full lg:flex-grow h-[50vh] lg:h-full min-h-[350px] lg:min-h-0 shrink-0 lg:shrink">
@@ -471,44 +471,7 @@ export default function RoomPage() {
             )}
           </div>
 
-          {/* Speakers Presence list */}
-          <div className="p-4 rounded-2xl glass-card border border-slate-200/40 dark:border-slate-800/40">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
-                <Users className="w-3.5 h-3.5 text-brand-500" />
-                <span>Participants ({participants.length})</span>
-              </div>
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
-                Limit: {room?.max_participants}
-              </span>
-            </div>
-
-            {/* List */}
-            <div className="flex flex-wrap gap-1.5">
-              {participants.map((p) => {
-                const isHost = room?.host_name === p.user_name;
-                const isCurrent = p.user_name === userName;
-                
-                return (
-                  <span
-                    key={p.id}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
-                      isCurrent
-                        ? "bg-brand-500 text-white"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/30 dark:border-slate-700/20"
-                    }`}
-                  >
-                    <span>{p.user_name}</span>
-                    {isHost && (
-                      <span className="text-[9px] uppercase px-1 rounded bg-brand-600 dark:bg-brand-900 text-white scale-90">
-                        Host
-                      </span>
-                    )}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
+          {/* Speakers Presence list removed */}
 
 
 
