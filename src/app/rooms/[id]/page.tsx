@@ -10,7 +10,7 @@ import { supabase } from "@/lib/supabase";
 import { DifficultyType } from "@/utils/helpers";
 import JitsiMeeting from "@/components/JitsiMeeting";
 import ChatSidebar from "@/components/ChatSidebar";
-import SpeakingTimer from "@/components/SpeakingTimer";
+
 
 interface RoomDetails {
   id: string;
@@ -498,8 +498,7 @@ export default function RoomPage() {
             </div>
           </div>
 
-          {/* Speaking Timer */}
-          <SpeakingTimer />
+
 
           {/* Chat Component */}
           <div className="flex-grow lg:h-80 min-h-[300px]">

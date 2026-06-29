@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <head>
         {/* Load Jitsi External API globally for instant call loads */}
-        <script src="https://meet.jit.si/external_api.js" defer></script>
+        <script src="https://meet.ffmuc.net/external_api.js" defer></script>
       </head>
       <body className={`${outfit.variable} font-sans antialiased text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-[#0b0c16]`}>
         {/* Visual premium background glows */}
