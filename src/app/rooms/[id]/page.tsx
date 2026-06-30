@@ -97,7 +97,7 @@ export default function RoomPage() {
     fetchRoomDetails();
   }, [roomId]);
 
-  // Handle participant inserts and unloads
+  // 1. Handle participant insert (Run once when username and password are ready)
   useEffect(() => {
     // Only add participant once metadata is loaded, username is set, and password verified
     if (!room || !userName || !isPasswordVerified || participantAddedRef.current) return;
@@ -130,6 +130,14 @@ export default function RoomPage() {
     };
 
     addParticipant();
+  }, [room, userName, isPasswordVerified, roomId]);
+
+  // 2. Handle presence heartbeat & participant list subscriptions (Run continuously)
+  useEffect(() => {
+    if (!room || !userName || !isPasswordVerified) return;
+
+    let sessionId = sessionStorage.getItem(`ebc_session_${roomId}`);
+    if (!sessionId) return;
 
     // Fetch initial participant list
     const fetchParticipants = async () => {
@@ -168,7 +176,8 @@ export default function RoomPage() {
       )
       .subscribe();
 
-    const heartbeatInterval = setInterval(async () => {
+    // Trigger instant heartbeat immediately when component mounts
+    const triggerHeartbeat = async () => {
       try {
         await fetch("/api/rooms/heartbeat", {
           method: "POST",
@@ -176,9 +185,13 @@ export default function RoomPage() {
           body: JSON.stringify({ roomId, sessionId })
         });
       } catch (err) {
-        console.error("Heartbeat error:", err);
+        console.error("Initial heartbeat error:", err);
       }
-    }, 10000);
+    };
+    triggerHeartbeat();
+
+    // Setup periodic 10-second heartbeat
+    const heartbeatInterval = setInterval(triggerHeartbeat, 10000);
 
     return () => {
       clearInterval(heartbeatInterval);
