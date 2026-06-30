@@ -202,11 +202,11 @@ export default function RoomPage() {
 
     const heartbeatInterval = setInterval(async () => {
       try {
-        await supabase
-          .from("participants")
-          .update({ joined_at: new Date().toISOString() })
-          .eq("session_id", sessionId)
-          .eq("room_id", roomId);
+        await fetch("/api/rooms/heartbeat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomId, sessionId })
+        });
       } catch (err) {
         console.error("Heartbeat error:", err);
       }

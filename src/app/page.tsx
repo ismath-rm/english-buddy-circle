@@ -38,12 +38,10 @@ function DashboardContent() {
     else setIsRefreshing(true);
 
     try {
-      // Clean up stale participants (older than 20 seconds) in the database first
-      const cutoff = new Date(Date.now() - 20000).toISOString();
-      await supabase
-        .from("participants")
-        .delete()
-        .lt("joined_at", cutoff);
+      // Clean up stale participants and empty rooms server-side using synchronized clock
+      await fetch("/api/rooms/cleanup", { method: "POST" }).catch((err) =>
+        console.error("Cleanup API call failed:", err)
+      );
 
       // Fetch rooms and count of participants per room
       const { data, error } = await supabase
@@ -51,48 +49,35 @@ function DashboardContent() {
         .select(`
           *,
           participants (
-            id
+            id,
+            user_name
           )
         `)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      // Map Supabase payload to match our Room structure with participant count
-      const mappedRooms: Room[] = (data || []).map((room: any) => ({
-        id: room.id,
-        name: room.name,
-        topic: room.topic,
-        category: room.category,
-        difficulty: room.difficulty,
-        max_participants: room.max_participants,
-        host_name: room.host_name,
-        description: room.description,
-        is_private: room.is_private,
-        created_at: room.created_at,
-        participant_count: room.participants ? room.participants.length : 0
-      }));
+      // Map Supabase payload to match our Room structure with participant count (deduplicated by username)
+      const mappedRooms: Room[] = (data || []).map((room: any) => {
+        const rawParticipants = room.participants || [];
+        const uniqueParticipants = rawParticipants.filter((p: any, index: number, self: any[]) =>
+          p.user_name && self.findIndex((t) => t.user_name.toLowerCase().trim() === p.user_name.toLowerCase().trim()) === index
+        );
 
-      // Find empty rooms (participant_count === 0) that are older than 30 seconds to delete them on the database side
-      const now = new Date().getTime();
-      const emptyRoomIds = mappedRooms
-        .filter((r) => {
-          const createdTime = new Date(r.created_at).getTime();
-          const ageInSeconds = (now - createdTime) / 1000;
-          return r.participant_count === 0 && ageInSeconds > 30;
-        })
-        .map((r) => r.id);
-
-      if (emptyRoomIds.length > 0) {
-        console.log("Client-side cleanup: Deleting empty rooms:", emptyRoomIds);
-        supabase
-          .from("rooms")
-          .delete()
-          .in("id", emptyRoomIds)
-          .then(({ error }) => {
-            if (error) console.error("Error cleaning empty rooms:", error);
-          });
-      }
+        return {
+          id: room.id,
+          name: room.name,
+          topic: room.topic,
+          category: room.category,
+          difficulty: room.difficulty,
+          max_participants: room.max_participants,
+          host_name: room.host_name,
+          description: room.description,
+          is_private: room.is_private,
+          created_at: room.created_at,
+          participant_count: uniqueParticipants.length
+        };
+      });
 
       // Filter out empty rooms to show only active rooms to the user
       const activeRooms = mappedRooms.filter((room) => room.participant_count > 0);
