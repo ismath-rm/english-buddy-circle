@@ -20,6 +20,11 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
   const jitsiApiRef = useRef<any>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const onLeaveRef = useRef(onLeave);
+
+  useEffect(() => {
+    onLeaveRef.current = onLeave;
+  }, [onLeave]);
 
   useEffect(() => {
     let scriptTimeout: NodeJS.Timeout;
@@ -96,12 +101,12 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         // Event listeners
         api.addEventListener("readyToClose", () => {
           console.log("Jitsi: User closed conference");
-          onLeave();
+          onLeaveRef.current();
         });
 
         api.addEventListener("videoConferenceLeft", () => {
           console.log("Jitsi: User left conference");
-          onLeave();
+          onLeaveRef.current();
         });
 
         api.addEventListener("chatUpdated", (data: any) => {
@@ -151,7 +156,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         jitsiApiRef.current.dispose();
       }
     };
-  }, [roomId, userName, onLeave]);
+  }, [roomId, userName]);
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-slate-900">

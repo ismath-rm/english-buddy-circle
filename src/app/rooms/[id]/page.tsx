@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { 
   Users, BookOpen, User, Shield, Info, 
@@ -266,7 +266,7 @@ export default function RoomPage() {
     setPromptName(false);
   };
 
-  const handleLeaveRoom = () => {
+  const handleLeaveRoom = useCallback(() => {
     const sessionId = sessionStorage.getItem(`ebc_session_${roomId}`);
     if (sessionId) {
       supabase
@@ -280,7 +280,7 @@ export default function RoomPage() {
     } else {
       router.push("/");
     }
-  };
+  }, [roomId, router]);
 
   // Rendering States
   if (loading) {
