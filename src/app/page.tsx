@@ -34,10 +34,17 @@ function DashboardContent() {
 
   // Fetch Rooms with their participant counts
   const fetchRooms = async (silent = false) => {
-    if (!silent) setLoading(true);
+    if (!silent && rooms.length === 0) setLoading(true);
     else setIsRefreshing(true);
 
     try {
+      // Clean up stale participants (older than 20 seconds) in the database first
+      const cutoff = new Date(Date.now() - 20000).toISOString();
+      await supabase
+        .from("participants")
+        .delete()
+        .lt("joined_at", cutoff);
+
       // Fetch rooms and count of participants per room
       const { data, error } = await supabase
         .from("rooms")

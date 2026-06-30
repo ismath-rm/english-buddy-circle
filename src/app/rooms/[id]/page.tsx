@@ -200,9 +200,22 @@ export default function RoomPage() {
         });
     };
 
+    const heartbeatInterval = setInterval(async () => {
+      try {
+        await supabase
+          .from("participants")
+          .update({ joined_at: new Date().toISOString() })
+          .eq("session_id", sessionId)
+          .eq("room_id", roomId);
+      } catch (err) {
+        console.error("Heartbeat error:", err);
+      }
+    }, 10000);
+
     window.addEventListener("beforeunload", cleanupUser);
 
     return () => {
+      clearInterval(heartbeatInterval);
       window.removeEventListener("beforeunload", cleanupUser);
       supabase.removeChannel(pChannel);
       cleanupUser();
@@ -403,7 +416,10 @@ export default function RoomPage() {
 
   // 3. Main Call Screen (Full screen Jitsi call)
   return (
-    <div className="fixed inset-0 w-screen h-[100dvh] overflow-hidden bg-[#131526] z-50">
+    <div 
+      className="fixed inset-0 w-screen h-[100dvh] overflow-hidden bg-[#131526] z-50 select-none"
+      style={{ WebkitTouchCallout: "none" }}
+    >
       <JitsiMeeting 
         roomId={roomId} 
         userName={userName} 

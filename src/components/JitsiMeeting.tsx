@@ -47,8 +47,7 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
             // Standard performance & UI overrides
             startWithAudioMuted: false,
             startWithVideoMuted: true,
-            startAudioOnly: true, // Force audio-only mode
-            constraints: { video: false }, // Completely disable video stream requests
+            startAudioOnly: false, // Enable video/cameras
             prejoinConfig: {
               enabled: false
             },
@@ -183,6 +182,20 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
         </div>
       )}
 
+      {/* Transparent Jitsi watermark click blocker overlay */}
+      <div 
+        className="absolute top-0 w-32 h-14 bg-transparent pointer-events-auto z-10"
+        style={{ left: isChatOpen ? "375px" : "0px" }}
+      />
+
+      {/* Prevent text selection and iOS link/image long-press context menus */}
+      <style>{`
+        #jitsi-iframe-container iframe {
+          -webkit-touch-callout: none !important;
+          -webkit-user-select: none !important;
+          user-select: none !important;
+        }
+      `}</style>
 
       {/* Jitsi iframe mount point */}
       <div id="jitsi-iframe-container" ref={containerRef} className="w-full h-full jitsi-container" />
