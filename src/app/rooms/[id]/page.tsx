@@ -168,38 +168,6 @@ export default function RoomPage() {
       )
       .subscribe();
 
-    // Clean up participant on beforeunload & unmount
-    const cleanupUser = () => {
-      const sessionIdStr = sessionStorage.getItem(`ebc_session_${roomId}`);
-      if (!sessionIdStr) return;
-
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (supabaseUrl && supabaseAnonKey) {
-        const url = `${supabaseUrl}/rest/v1/participants?session_id=eq.${sessionIdStr}&room_id=eq.${roomId}`;
-        fetch(url, {
-          method: "DELETE",
-          headers: {
-            "apikey": supabaseAnonKey,
-            "Authorization": `Bearer ${supabaseAnonKey}`,
-            "Content-Type": "application/json"
-          },
-          keepalive: true
-        }).catch(err => console.error("Unload fetch error:", err));
-      }
-
-      // Direct async deletion
-      supabase
-        .from("participants")
-        .delete()
-        .eq("session_id", sessionIdStr)
-        .eq("room_id", roomId)
-        .then(({ error }) => {
-          if (error) console.error("Error cleaning participant:", error);
-        });
-    };
-
     const heartbeatInterval = setInterval(async () => {
       try {
         await fetch("/api/rooms/heartbeat", {
@@ -212,13 +180,9 @@ export default function RoomPage() {
       }
     }, 10000);
 
-    window.addEventListener("beforeunload", cleanupUser);
-
     return () => {
       clearInterval(heartbeatInterval);
-      window.removeEventListener("beforeunload", cleanupUser);
       supabase.removeChannel(pChannel);
-      cleanupUser();
     };
   }, [room, userName, isPasswordVerified, roomId]);
 
