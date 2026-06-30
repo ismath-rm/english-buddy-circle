@@ -136,7 +136,7 @@ export default function RoomPage() {
   useEffect(() => {
     if (!room || !userName || !isPasswordVerified) return;
 
-    let sessionId = sessionStorage.getItem(`ebc_session_${roomId}`);
+    const sessionId = sessionStorage.getItem(`ebc_session_${roomId}`);
     if (!sessionId) return;
 
     // Fetch initial participant list
