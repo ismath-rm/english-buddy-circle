@@ -182,7 +182,7 @@ export default function RoomPage() {
         await fetch("/api/rooms/heartbeat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ roomId, sessionId })
+          body: JSON.stringify({ roomId, sessionId, userName })
         });
       } catch (err) {
         console.error("Initial heartbeat error:", err);

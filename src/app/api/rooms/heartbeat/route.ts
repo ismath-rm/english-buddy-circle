@@ -3,9 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: Request) {
   try {
-    const { roomId, sessionId } = await req.json();
+    const { roomId, sessionId, userName } = await req.json();
     
-    if (!roomId || !sessionId) {
+    if (!roomId || !sessionId || !userName) {
       return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
     }
 
@@ -18,12 +18,22 @@ export async function POST(req: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Update joined_at to the server's current timestamp (immune to client clock drift)
-    const { error } = await supabase
+    // 1. Delete the old participant row to bypass RLS UPDATE restrictions
+    await supabase
       .from("participants")
-      .update({ joined_at: new Date().toISOString() })
+      .delete()
       .eq("session_id", sessionId)
       .eq("room_id", roomId);
+
+    // 2. Insert a fresh participant row with the server's synchronized timestamp
+    const { error } = await supabase
+      .from("participants")
+      .insert({
+        room_id: roomId,
+        session_id: sessionId,
+        user_name: userName,
+        joined_at: new Date().toISOString()
+      });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
