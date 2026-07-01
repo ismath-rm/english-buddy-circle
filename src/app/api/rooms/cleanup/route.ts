@@ -37,7 +37,7 @@ export async function POST() {
           const createdTime = new Date(r.created_at).getTime();
           const ageInSeconds = (now - createdTime) / 1000;
           const count = r.participants ? r.participants.length : 0;
-          return count === 0 && ageInSeconds > 30;
+          return count === 0 && ageInSeconds > 600;
         })
         .map((r: any) => r.id);
 

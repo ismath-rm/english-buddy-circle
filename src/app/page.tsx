@@ -38,11 +38,6 @@ function DashboardContent() {
     else setIsRefreshing(true);
 
     try {
-      // Clean up stale participants and empty rooms server-side using synchronized clock
-      await fetch("/api/rooms/cleanup", { method: "POST" }).catch((err) =>
-        console.error("Cleanup API call failed:", err)
-      );
-
       // Fetch rooms and count of participants per room
       const { data, error } = await supabase
         .from("rooms")
@@ -70,7 +65,7 @@ function DashboardContent() {
           topic: room.topic,
           category: room.category,
           difficulty: room.difficulty,
-          max_participants: room.max_participants,
+          max_participants: room.max_participants || 30,
           host_name: room.host_name,
           description: room.description,
           is_private: room.is_private,
@@ -81,9 +76,8 @@ function DashboardContent() {
 
       // Filter out empty rooms to show only active rooms to the user
       const activeRooms = mappedRooms.filter((room) => room.participant_count > 0);
-
       setRooms(activeRooms);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching rooms:", err);
     } finally {
       setLoading(false);
@@ -100,6 +94,11 @@ function DashboardContent() {
 
   // Initial Fetch & Realtime Subscriptions
   useEffect(() => {
+    // Run cleanup once on mount to prune stale participants and long-abandoned rooms
+    fetch("/api/rooms/cleanup", { method: "POST" }).catch((err) =>
+      console.error("Cleanup API call failed:", err)
+    );
+
     fetchRooms();
 
     // Listen for additions, deletions, or modifications on rooms and participants
