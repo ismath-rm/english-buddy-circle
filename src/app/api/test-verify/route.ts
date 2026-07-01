@@ -17,6 +17,7 @@ export async function GET(request: Request) {
   addLog("--- STARTING DB TRIGGER BEHAVIOR TEST ---");
   let testRoomId = null;
   const testSessionId = "test_verify_session_12345";
+  const testUserName = "Test Verifier";
 
   try {
     // 1. Create a room
