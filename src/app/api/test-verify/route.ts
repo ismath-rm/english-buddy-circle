@@ -54,27 +54,90 @@ export async function GET(request: Request) {
     if (partError) throw partError;
     addLog(`✓ Participant inserted: ${part.id}`);
 
-    // 3. Test if UPDATE query works on participants table
-    addLog("3. Simulating presence heartbeat via UPDATE query...");
-    const { data: updateData, error: updateError } = await supabase
+    // 3. Simulating presence heartbeat via Dummy-Participant-Insert strategy
+    addLog("3. Simulating presence heartbeat via Dummy-Participant strategy...");
+    
+    // a. Insert dummy participant to protect room from trigger deletion
+    const dummySessionId = `system_dummy_${testRoomId}_${Math.random().toString(36).substring(2)}`;
+    const { data: dummyPart, error: dummyInsError } = await supabase
       .from("participants")
-      .update({ joined_at: new Date().toISOString() })
-      .eq("session_id", testSessionId)
-      .eq("room_id", testRoomId)
-      .select();
+      .insert({
+        room_id: testRoomId,
+        session_id: dummySessionId,
+        user_name: "System"
+      })
+      .select()
+      .single();
 
-    if (updateError) {
-      addLog(`✗ UPDATE query failed: ${updateError.message}`);
-      throw updateError;
+    if (dummyInsError) {
+      addLog(`✗ Dummy insert failed: ${dummyInsError.message}`);
+      throw dummyInsError;
     }
-    addLog(`✓ UPDATE query succeeded! Updated row: ${JSON.stringify(updateData)}`);
+    addLog("✓ Dummy participant inserted successfully.");
 
-    // 4. Delete participant
-    addLog("4. Deleting participant...");
+    // b. Delete Host participant
+    const { error: delError } = await supabase
+      .from("participants")
+      .delete()
+      .eq("session_id", testSessionId)
+      .eq("room_id", testRoomId);
+    if (delError) {
+      addLog(`✗ Host delete failed: ${delError.message}`);
+      throw delError;
+    }
+    addLog("✓ Host participant deleted.");
+
+    // c. Insert Host participant back with fresh timestamp
+    const { data: newPart, error: insError } = await supabase
+      .from("participants")
+      .insert({
+        room_id: testRoomId,
+        session_id: testSessionId,
+        user_name: testUserName,
+        joined_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (insError) {
+      addLog(`✗ Host re-insert failed: ${insError.message}`);
+      throw insError;
+    }
+    addLog("✓ Host participant re-inserted.");
+
+    // d. Delete dummy participant
+    const { error: dummyDelError } = await supabase
+      .from("participants")
+      .delete()
+      .eq("session_id", dummySessionId)
+      .eq("room_id", testRoomId);
+    if (dummyDelError) {
+      addLog(`✗ Dummy delete failed: ${dummyDelError.message}`);
+      throw dummyDelError;
+    }
+    addLog("✓ Dummy participant cleaned up.");
+
+    // 4. Verify participant timestamp exists
+    addLog("4. Verifying database record state after heartbeat...");
+    const { data: updatedParts, error: fetchError } = await supabase
+      .from("participants")
+      .select("*")
+      .eq("room_id", testRoomId)
+      .eq("session_id", testSessionId);
+
+    if (fetchError) throw fetchError;
+    if (updatedParts.length !== 1) {
+      throw new Error(`Expected exactly 1 participant row, but found: ${updatedParts.length}`);
+    }
+    const updatedRecord = updatedParts[0];
+    addLog(`✓ Heartbeat preserved participant presence row correctly! joined_at: ${updatedRecord.joined_at}`);
+
+    // 5. Deleting participant to check room deletion
+    addLog("5. Deleting participant to check room deletion...");
     const { error: deleteError } = await supabase
       .from("participants")
       .delete()
-      .eq("id", part.id);
+      .eq("id", newPart.id);
 
     if (deleteError) throw deleteError;
     addLog("✓ Participant deleted.");
