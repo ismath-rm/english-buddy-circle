@@ -27,6 +27,9 @@ export async function GET(request: Request) {
       .insert({
         name: "API verification Room",
         topic: "Verification testing",
+        category: "General",
+        difficulty: "Intermediate",
+        max_participants: 5,
         host_name: "Test Verifier",
         is_private: false
       })
