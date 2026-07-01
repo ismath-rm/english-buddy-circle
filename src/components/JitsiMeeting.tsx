@@ -65,6 +65,10 @@ export default function JitsiMeeting({ roomId, userName, onLeave }: JitsiMeeting
             brandShowName: false,      // Hide brand name text
             favicon: "/favicon.ico",   // Override favicon to preserve site icon
             disableInviteFunctions: true, // Disable Jitsi default invite overlay (we use our own)
+            remoteVideoMenu: {
+              disabled: true
+            },
+            disableRemoteMute: true,
             toolbarButtons: [
               "microphone",
               "camera",
