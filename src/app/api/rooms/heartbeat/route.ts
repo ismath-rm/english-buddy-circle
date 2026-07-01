@@ -18,14 +18,24 @@ export async function POST(req: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 1. Delete the old participant row to bypass RLS UPDATE restrictions
+    // 1. Insert a temporary dummy participant to protect the room from trigger deletion
+    const dummySessionId = `system_dummy_${roomId}_${Math.random().toString(36).substring(2)}`;
+    await supabase
+      .from("participants")
+      .insert({
+        room_id: roomId,
+        session_id: dummySessionId,
+        user_name: "System"
+      });
+
+    // 2. Delete the old participant row to bypass RLS UPDATE restrictions
     await supabase
       .from("participants")
       .delete()
       .eq("session_id", sessionId)
       .eq("room_id", roomId);
 
-    // 2. Insert a fresh participant row with the server's synchronized timestamp
+    // 3. Insert a fresh participant row with the server's synchronized timestamp
     const { error } = await supabase
       .from("participants")
       .insert({
@@ -34,6 +44,13 @@ export async function POST(req: Request) {
         user_name: userName,
         joined_at: new Date().toISOString()
       });
+
+    // 4. Clean up the temporary dummy participant
+    await supabase
+      .from("participants")
+      .delete()
+      .eq("session_id", dummySessionId)
+      .eq("room_id", roomId);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
