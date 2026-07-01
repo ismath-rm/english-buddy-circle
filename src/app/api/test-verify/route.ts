@@ -16,6 +16,7 @@ export async function GET(request: Request) {
 
   addLog("--- STARTING DB TRIGGER BEHAVIOR TEST ---");
   let testRoomId = null;
+  const testSessionId = "test_verify_session_12345";
 
   try {
     // 1. Create a room
@@ -44,7 +45,7 @@ export async function GET(request: Request) {
       .from("participants")
       .insert({
         room_id: testRoomId,
-        session_id: "trigger_test_session_999",
+        session_id: testSessionId,
         user_name: "Test Participant"
       })
       .select()
@@ -53,8 +54,23 @@ export async function GET(request: Request) {
     if (partError) throw partError;
     addLog(`✓ Participant inserted: ${part.id}`);
 
-    // 3. Delete participant
-    addLog("3. Deleting participant...");
+    // 3. Test if UPDATE query works on participants table
+    addLog("3. Simulating presence heartbeat via UPDATE query...");
+    const { data: updateData, error: updateError } = await supabase
+      .from("participants")
+      .update({ joined_at: new Date().toISOString() })
+      .eq("session_id", testSessionId)
+      .eq("room_id", testRoomId)
+      .select();
+
+    if (updateError) {
+      addLog(`✗ UPDATE query failed: ${updateError.message}`);
+      throw updateError;
+    }
+    addLog(`✓ UPDATE query succeeded! Updated row: ${JSON.stringify(updateData)}`);
+
+    // 4. Delete participant
+    addLog("4. Deleting participant...");
     const { error: deleteError } = await supabase
       .from("participants")
       .delete()
